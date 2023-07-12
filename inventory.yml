@@ -1,0 +1,25 @@
+all:
+    vars:
+    children:
+        nodes:
+            vars:
+            hosts:
+                exporter1:
+                    ansible_host: 192.160.0.107
+                    ansible_connection: ssh
+                    ansible_user: ubuntu
+                exporter2:
+                    ansible_host: 192.160.0.106
+                    ansible_connection: ssh
+                    ansible_user: ubuntu
+                exporter3:
+                    ansible_host: 192.160.0.105
+                    ansible_connection: ssh
+                    ansible_user: ubuntu
+        proms:
+            vars:
+            hosts:
+                prom1:
+                    ansible_host: 192.160.0.108
+                    ansible_connection: ssh
+                    ansible_user: ubuntu

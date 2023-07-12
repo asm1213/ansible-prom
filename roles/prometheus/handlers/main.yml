@@ -2,14 +2,11 @@
 - name: Restart prometheus
   listen: "restart prometheus"
   become: true
-  ansible.builtin.systemd:
-    daemon_reload: true
-    name: prometheus
-    state: restarted
+  ansible.builtin.command: "docker compose down -v && docker compose up -d"
+  args:
+    chdir: "{{ prometheus_compose_dir }}"
 
 - name: Reload prometheus
   listen: "reload prometheus"
   become: true
-  ansible.builtin.systemd:
-    name: prometheus
-    state: reloaded
+  ansible.builtin.command: "curl -s -XPOST localhost:9090/-/reload"

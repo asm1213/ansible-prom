@@ -1,4 +1,5 @@
 ---
+prometheus_compose_dir: "/testapp"
 prometheus_version: 2.45.0
 prometheus_binary_local_dir: ''
 prometheus_binary_url: "https://github.com/{{ _prometheus_repo }}/releases/download/v{{ prometheus_version }}/\
@@ -6,8 +7,8 @@ prometheus_binary_url: "https://github.com/{{ _prometheus_repo }}/releases/downl
 prometheus_checksums_url: "https://github.com/{{ _prometheus_repo }}/releases/download/v{{ prometheus_version }}/sha256sums.txt"
 prometheus_skip_install: false
 
-prometheus_config_dir: /etc/prometheus
-prometheus_db_dir: /var/lib/prometheus
+prometheus_config_dir: "{{ prometheus_compose_dir }}/config"
+prometheus_db_dir: "{{ prometheus_compose_dir }}/tsdb"
 prometheus_read_only_dirs: []
 
 prometheus_web_listen_address: "0.0.0.0:9090"
@@ -80,9 +81,12 @@ prometheus_scrape_configs:
       - targets:
           - "{{ ansible_fqdn | default(ansible_host) | default('localhost') }}:9090"
   - job_name: "node"
+    scheme: https
+    tls_config:
+      insecure_skip_verify: true
     file_sd_configs:
       - files:
-          - "{{ prometheus_config_dir }}/file_sd/node.yml"
+          - "/etc/prometheus/config/file_sd/node.yml"
 
 # Alternative config file name, searched in ansible templates path.
 prometheus_config_file: 'prometheus.yml.j2'

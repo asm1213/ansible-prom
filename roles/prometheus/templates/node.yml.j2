@@ -1,0 +1,3 @@
+{% for host in groups['nodes'] %}
+- targets: ['{{ hostvars[host].ansible_host }}:9100']
+{% endfor %}

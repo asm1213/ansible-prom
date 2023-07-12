@@ -1,0 +1,33 @@
+---
+- name: Install and config node-exporter
+  hosts: nodes
+  become: true
+
+  pre_tasks:
+    - name: Create node_exporter cert dir
+      file:
+        path: "/etc/node_exporter"
+        state: directory
+        owner: root
+        group: root
+    - name: Create privatekey
+      openssl_privatekey:
+        path: /etc/node_exporter/tls.key
+    - name: Create cert
+      openssl_certificate:
+        path: /etc/node_exporter/tls.cert
+        privatekey_path: /etc/node_exporter/tls.key
+        provider: selfsigned
+
+  roles:
+    - node_exporter
+  vars:
+    node_exporter_tls_server_config:
+      cert_file: /etc/node_exporter/tls.cert
+      key_file: /etc/node_exporter/tls.key   
+
+- name: Promes
+  hosts: proms
+  become: true 
+  roles: 
+    - prometheus 
